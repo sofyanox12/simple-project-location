@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS locations (
+    id         INT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    country    VARCHAR(255) NOT NULL,
+    province   VARCHAR(255) NOT NULL,
+    city       VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+);
