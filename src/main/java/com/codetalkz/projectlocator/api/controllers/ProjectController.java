@@ -19,14 +19,14 @@ import com.codetalkz.projectlocator.api.service.ProjectService;
 
 @CrossOrigin(origins = "http://localhost:8088")
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api")
 public class ProjectController {
     
     private final ProjectService projectService = new ProjectService();
 
     /* GET */
-    @GetMapping("")
-    public ResponseEntity<List<Project>> getAllProjects(@RequestParam String param) {
+    @GetMapping("/projects")
+    public ResponseEntity<List<Project>> getAllProjects(@RequestParam String requestParams) {
         try {
             List<Project> projects = projectService.getAll();
             return ResponseEntity.ok(projects);
@@ -35,7 +35,7 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/projects/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable String id) {
         try {
             Project project = projectService.getById(Integer.parseInt(id));
@@ -46,7 +46,7 @@ public class ProjectController {
     }
 
     /* POST */
-    @PostMapping("")
+    @PostMapping("/projects")
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
         try {
             Project createdProject = projectService.create(project);
@@ -57,7 +57,7 @@ public class ProjectController {
     }
 
     /* PUT */
-    @PutMapping("/{id}")
+    @PutMapping("/projects/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable String id, @RequestBody Project project) {
         try {
             Project updatedProject = projectService.update(Integer.parseInt(id), project);
@@ -68,7 +68,7 @@ public class ProjectController {
     }
 
     /* DELETE */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/projects/{id}")
     public ResponseEntity<Boolean> deleteProject(@PathVariable String id) {
         try {
             boolean deleted = projectService.deleteById(Integer.parseInt(id));
@@ -78,7 +78,7 @@ public class ProjectController {
         }
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/projects")
     public ResponseEntity<Boolean> deleteAllProjects() {
         try {
             boolean deleted = projectService.deleteAll();
