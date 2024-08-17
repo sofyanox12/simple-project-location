@@ -2,6 +2,7 @@ package com.codetalkz.projectlocator.api.controllers;
 
 import java.util.List;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,60 +15,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codetalkz.projectlocator.api.models.Project;
-import com.codetalkz.projectlocator.api.repositories.ProjectRepository;
+import com.codetalkz.projectlocator.api.models.Location;
+import com.codetalkz.projectlocator.api.repositories.LocationRepository;
 
 @CrossOrigin(origins = "http://localhost:8088")
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectController {
+@RequestMapping("/api/locations")
+public class LocationController {
 
-    private final ProjectRepository projectRepository;
+    private LocationRepository locationRepository;
 
-    ProjectController(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
+    public LocationController(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
     }
 
     /* GET */
     @GetMapping("/")
-    public ResponseEntity<List<Project>> getAllProjects(@RequestParam String requestParams) {
-        return ResponseEntity.ok(projectRepository.findAll());
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable String id) {
-        return ResponseEntity.ok(projectRepository.findById(Integer.parseInt(id)).get());
+    public ResponseEntity<List<Location>> getAllLocations(@RequestParam String requestParams) {
+        return ResponseEntity.ok(locationRepository.findAll());
     }
 
     /* POST */
     @PostMapping("/")
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        return ResponseEntity.ok(projectRepository.save(project));
+    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
+        return ResponseEntity.ok(locationRepository.save(location));
     }
 
     /* PUT */
     @PutMapping("/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable String id, @RequestBody Project project) {
-        project.setId(Integer.parseInt(id));
-        return ResponseEntity.ok(projectRepository.save(project));
+    public ResponseEntity<Location> updateLocation(@PathVariable String id, @RequestBody Location location) {
+        location.setId(Integer.parseInt(id));
+        return ResponseEntity.ok(locationRepository.save(location));
     }
 
     /* DELETE */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteProject(@PathVariable String id) {
+    public ResponseEntity<Boolean> deleteLocation(@PathVariable String id) {
         try {
-            projectRepository.deleteById(Integer.parseInt(id));
+            locationRepository.deleteById(Integer.parseInt(id));
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    
     @DeleteMapping("/")
-    public ResponseEntity<Boolean> deleteAllProjects() {
+    public ResponseEntity<Boolean> deleteAllLocations() {
         try {
-            projectRepository.deleteAll();
+            locationRepository.deleteAll();
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

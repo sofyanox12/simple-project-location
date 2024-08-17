@@ -11,7 +11,6 @@ public class Application implements CommandLineRunner {
 
 	private final ProjectRepository projectRepository;
 
-
 	public Application(ProjectRepository projectRepository) {
 		this.projectRepository = projectRepository;
 	}

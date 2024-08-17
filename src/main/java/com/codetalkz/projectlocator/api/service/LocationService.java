@@ -7,7 +7,7 @@ import com.codetalkz.projectlocator.api.models.Location;
 
 public class LocationService {
     static List<Location> locations = new ArrayList<>();
-    static int id = 0;
+    private int id = 0;
 
     /* GET */
     public List<Location> getAll() {
@@ -24,8 +24,8 @@ public class LocationService {
     }
 
     /* POST */
-    public static Location create(Location location) {
-        location.setId(id++);
+    public Location create(Location location) {
+        location.setId(this.id++);
         locations.add(location);
         return location;
     }
