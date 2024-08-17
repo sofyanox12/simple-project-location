@@ -4,9 +4,9 @@ spring:
     application:
         name: projectlocator
     datasource:
-        url: jdbc:postgresql://3tk.h.filess.io:5433/dbprojectlocation_ishabitto?currentSchema="codetalkz"
-        username: dbprojectlocation_ishabitto
-        password: dc6cca2e5cec2c8db478030d3df9f8cba806111e
+        url: jdbc:postgresql://localhost:5432/db-project-locator?currentSchema="base"
+        username: postgres
+        password: postgres
         driver-class-name: org.postgresql.Driver
     jpa:
         hibernate:

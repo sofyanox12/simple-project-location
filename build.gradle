@@ -38,10 +38,10 @@ dependencies {
 }
 
 flyway {
-	url = 'jdbc:postgresql://3tk.h.filess.io:5433/dbprojectlocation_ishabitto'
-	user = 'dbprojectlocation_ishabitto'
-	password = 'dc6cca2e5cec2c8db478030d3df9f8cba806111e'
-	defaultSchema = 'codetalkz'
+	url = 'jdbc:postgresql://localhost:5432/db-project-locator'
+	user = 'postgres'
+	password = 'postgres'
+	defaultSchema = 'base'
 }
 
 tasks.named('test') {
