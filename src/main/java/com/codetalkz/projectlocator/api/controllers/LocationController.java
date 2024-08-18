@@ -36,7 +36,7 @@ public class LocationController {
             List<Location> locations = locationRepository.findAll();
             return ResponseHandler.give(locations, "Successfully get all locations", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to get all locations", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -47,7 +47,7 @@ public class LocationController {
             Location newLocation = locationRepository.save(location);
             return ResponseHandler.give(newLocation, "Successfully create location", HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to create location", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,12 +80,13 @@ public class LocationController {
 
             locationRepository.deleteAll();
 
-            return ResponseHandler.give(null, "Successfully delete all " + locations.size() + " locations" , HttpStatus.OK);
+            return ResponseHandler.give(null, "Successfully delete all " + locations.size() + " locations",
+                    HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete all locations", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @DeleteMapping("/locations/{id}")
     public ResponseEntity<Object> deleteLocation(@PathVariable String id) {
         try {
@@ -98,9 +99,8 @@ public class LocationController {
             locationRepository.delete(foundLocation);
             return ResponseHandler.give(foundLocation, "Successfully delete the location", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete location", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    
 }
