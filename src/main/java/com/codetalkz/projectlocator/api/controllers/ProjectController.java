@@ -1,5 +1,6 @@
 package com.codetalkz.projectlocator.api.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codetalkz.projectlocator.api.dto.ProjectDto;
 import com.codetalkz.projectlocator.api.handlers.ResponseHandler;
 import com.codetalkz.projectlocator.api.models.Project;
 import com.codetalkz.projectlocator.api.repositories.ProjectRepository;
+import com.codetalkz.projectlocator.utils.Formatter;
 
 @Validated
 @RequestMapping("/api/v1")
@@ -36,7 +39,7 @@ public class ProjectController {
             List<Project> projects = projectRepository.findAll();
             return ResponseHandler.give(projects, "Successfully get all projects", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to get all projects", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,18 +52,33 @@ public class ProjectController {
             }
             return ResponseHandler.give(project, "Successfully get project", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to get project", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /* POST */
     @PostMapping("/projects")
-    public ResponseEntity<Object> createProject(@RequestBody Project project) {
+    public ResponseEntity<Object> createProject(@RequestBody ProjectDto project) {
         try {
-            Project newProject = projectRepository.save(project);
-            return ResponseHandler.give(newProject, "Successfully create project", HttpStatus.CREATED);
+
+            // parse project start and end date from DD-MM-YYYY to LocalDateTime
+            LocalDateTime startDate = Formatter.toLocalDateTime(project.getStartDate());
+            LocalDateTime endDate = Formatter.toLocalDateTime(project.getEndDate());
+
+            Project savedProject = Project.builder()
+                    .name(project.getName())
+                    .client(project.getClient())
+                    .startDate(startDate)
+                    .endDate(endDate)
+                    .leader(project.getLeader())
+                    .description(project.getDescription())
+                    .build();
+
+            savedProject = projectRepository.save(savedProject);
+
+            return ResponseHandler.give(savedProject, "Successfully create project", HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to create project", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -72,7 +90,7 @@ public class ProjectController {
             Project updatedProject = projectRepository.save(project);
             return ResponseHandler.give(updatedProject, "Successfully update project", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to update project", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,7 +101,7 @@ public class ProjectController {
             projectRepository.deleteById(Integer.parseInt(id));
             return ResponseHandler.give(null, "Successfully delete project", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete project", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,7 +111,7 @@ public class ProjectController {
             projectRepository.deleteAll();
             return ResponseHandler.give(null, "Successfully delete all projects", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete all projects", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
