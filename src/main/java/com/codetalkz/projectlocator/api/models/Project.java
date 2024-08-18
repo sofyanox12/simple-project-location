@@ -1,13 +1,21 @@
 package com.codetalkz.projectlocator.api.models;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,9 +49,14 @@ public class Project {
 
     @Column(nullable = true)
     private String description;
-
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany
+    @JoinTable(name = "project_location", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "location_id"))
+    private Set<Location> locations;
 
     public Integer getId() {
         return id;
@@ -71,6 +84,10 @@ public class Project {
 
     public LocalDateTime getStartDate() {
         return startDate;
+    }
+
+    public Set<Location> getLocations() {
+        return locations;
     }
 
     public void setStartDate(LocalDateTime startDate) {
@@ -107,6 +124,10 @@ public class Project {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
     }
 
     public String toString() {
