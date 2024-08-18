@@ -25,9 +25,6 @@ public class LocationController {
 
     private final LocationRepository locationRepository;
 
-    private static final HttpStatus SUCCESS = HttpStatus.OK;
-    private static final HttpStatus ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
-
     public LocationController(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
@@ -37,9 +34,9 @@ public class LocationController {
     public ResponseEntity<Object> getAllLocations() {
         try {
             List<Location> locations = locationRepository.findAll();
-            return ResponseHandler.give(locations, "Successfully get all locations", SUCCESS);
+            return ResponseHandler.give(locations, "Successfully get all locations", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to get all locations", ERROR);
+            return ResponseHandler.give(null, "Failed to get all locations", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,7 +47,7 @@ public class LocationController {
             Location newLocation = locationRepository.save(location);
             return ResponseHandler.give(newLocation, "Successfully create location", HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to create location", ERROR);
+            return ResponseHandler.give(null, "Failed to create location", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -58,10 +55,16 @@ public class LocationController {
     @PutMapping("/locations/{id}")
     public ResponseEntity<Object> updateLocation(@PathVariable String id, @RequestBody Location location) {
         try {
-            Location updatedLocation = locationRepository.save(location);
-            return ResponseHandler.give(updatedLocation, "Successfully update location", SUCCESS);
+            Location foundLocation = locationRepository.findById(Integer.parseInt(id)).orElse(null);
+            if (foundLocation == null) {
+                return ResponseHandler.give(null, "Location not found", HttpStatus.NOT_FOUND);
+            }
+
+            foundLocation.update(location);
+
+            return ResponseHandler.give(foundLocation, "Successfully update the location", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to update location", ERROR);
+            return ResponseHandler.give(null, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,9 +73,9 @@ public class LocationController {
     public ResponseEntity<Object> deleteLocation(@PathVariable String id) {
         try {
             locationRepository.deleteById(Integer.parseInt(id));
-            return ResponseHandler.give(null, "Successfully delete location", SUCCESS);
+            return ResponseHandler.give(null, "Successfully delete location", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete location", ERROR);
+            return ResponseHandler.give(null, "Failed to delete location", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,9 +83,9 @@ public class LocationController {
     public ResponseEntity<Object> deleteAllLocations() {
         try {
             locationRepository.deleteAll();
-            return ResponseHandler.give(null, "Successfully delete all locations", SUCCESS);
+            return ResponseHandler.give(null, "Successfully delete all locations", HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete all locations", ERROR);
+            return ResponseHandler.give(null, "Failed to delete all locations", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
