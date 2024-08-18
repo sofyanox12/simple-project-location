@@ -7,6 +7,9 @@ public class Formatter {
     private Formatter() {}
 
     public static LocalDateTime toLocalDateTime(String date) {
+        if (date == null) {
+            return null;
+        }
         String[] dateParts = date.split("-");
         int day = Integer.parseInt(dateParts[0]);
         int month = Integer.parseInt(dateParts[1]);
