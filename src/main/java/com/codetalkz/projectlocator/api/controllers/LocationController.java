@@ -69,23 +69,38 @@ public class LocationController {
     }
 
     /* DELETE */
+    @DeleteMapping("/locations/all")
+    public ResponseEntity<Object> deleteAllLocations() {
+        try {
+            List<Location> locations = locationRepository.findAll();
+
+            if (locations.isEmpty()) {
+                return ResponseHandler.give(null, "No location deleted", HttpStatus.NOT_FOUND);
+            }
+
+            locationRepository.deleteAll();
+
+            return ResponseHandler.give(null, "Successfully delete all " + locations.size() + " locations" , HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseHandler.give(null, "Failed to delete all locations", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     @DeleteMapping("/locations/{id}")
     public ResponseEntity<Object> deleteLocation(@PathVariable String id) {
         try {
-            locationRepository.deleteById(Integer.parseInt(id));
-            return ResponseHandler.give(null, "Successfully delete location", HttpStatus.OK);
+            Location foundLocation = locationRepository.findById(Integer.parseInt(id)).orElse(null);
+
+            if (foundLocation == null) {
+                return ResponseHandler.give(null, "Location not found", HttpStatus.NOT_FOUND);
+            }
+
+            locationRepository.delete(foundLocation);
+            return ResponseHandler.give(foundLocation, "Successfully delete the location", HttpStatus.OK);
         } catch (Exception e) {
             return ResponseHandler.give(null, "Failed to delete location", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/locations")
-    public ResponseEntity<Object> deleteAllLocations() {
-        try {
-            locationRepository.deleteAll();
-            return ResponseHandler.give(null, "Successfully delete all locations", HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseHandler.give(null, "Failed to delete all locations", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    
 }
