@@ -7,14 +7,17 @@ public class ProjectDto {
     private String endDate;
     private String leader;
     private String description;
+    private Integer[] locationIds;
 
-    public ProjectDto(String name, String client, String startDate, String endDate, String leader, String description) {
+    public ProjectDto(String name, String client, String startDate, String endDate, String leader, String description,
+            Integer[] locationIds) {
         this.name = name;
         this.client = client;
         this.startDate = startDate;
         this.endDate = endDate;
         this.leader = leader;
         this.description = description;
+        this.locationIds = locationIds;
     }
 
     public String getName() {
@@ -41,6 +44,14 @@ public class ProjectDto {
         return description;
     }
 
+    public Integer[] getLocationsIds() {
+        if (locationIds == null) {
+            return new Integer[0];
+        }
+
+        return locationIds;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -65,6 +76,10 @@ public class ProjectDto {
         this.description = description;
     }
 
+    public void setLocationsIds(Integer[] locationIds) {
+        this.locationIds = locationIds;
+    }
+
     @Override
     public String toString() {
         return "ProjectDto{" +
@@ -74,6 +89,7 @@ public class ProjectDto {
                 ", endDate='" + endDate + '\'' +
                 ", leader='" + leader + '\'' +
                 ", description='" + description + '\'' +
+                ", locationIds=" + locationIds +
                 '}';
     }
 }

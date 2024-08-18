@@ -5,8 +5,10 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,13 +51,19 @@ public class Project {
 
     @Column(nullable = true)
     private String description;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToMany
-    @JoinTable(name = "project_location", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "location_id"))
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH,
+            CascadeType.REFRESH
+    })
+    @JoinTable(name = "project_locations", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "location_id"))
     private Set<Location> locations;
 
     public Integer getId() {
@@ -128,6 +136,36 @@ public class Project {
 
     public void setLocations(Set<Location> locations) {
         this.locations = locations;
+    }
+
+    public void update(Project project) {
+        if (project.getName() != null) {
+            this.name = project.getName();
+        }
+
+        if (project.getClient() != null) {
+            this.client = project.getClient();
+        }
+
+        if (project.getStartDate() != null) {
+            this.startDate = project.getStartDate();
+        }
+
+        if (project.getEndDate() != null) {
+            this.endDate = project.getEndDate();
+        }
+
+        if (project.getLeader() != null) {
+            this.leader = project.getLeader();
+        }
+
+        if (project.getDescription() != null) {
+            this.description = project.getDescription();
+        }
+
+        if (project.getLocations() != null) {
+            this.locations = project.getLocations();
+        }
     }
 
     public String toString() {
