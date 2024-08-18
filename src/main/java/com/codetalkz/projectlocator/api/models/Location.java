@@ -85,6 +85,24 @@ public class Location {
         this.createdAt = createdAt;
     }
 
+    public void update(Location location) {
+        if (this.id == null) {
+            throw new IllegalArgumentException("Location update is not allowed without an ID");
+        }
+
+        if (location.getName() != null)
+            this.name = location.getName();
+
+        if (location.getCountry() != null)
+            this.country = location.getCountry();
+
+        if (location.getProvince() != null)
+            this.province = location.getProvince();
+
+        if (location.getCity() != null)
+            this.city = location.getCity();
+    }
+
     public String toString() {
         return "Location {" +
                 "id=" + id +
